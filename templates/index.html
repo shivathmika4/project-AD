@@ -87,7 +87,7 @@
     <div class="floating-circles"></div>
     <script>
         function predictSentiment() {
-            alert("Sentiment prediction will be implemented here.");
+            window.location.href = "/predict";
         }
 
         function createFloatingCircles() {
@@ -96,11 +96,11 @@
                 let circle = document.createElement('div');
                 let size = Math.random() * 100 + 50;
                 circle.classList.add('circle');
-                circle.style.width = ${size}px;
-                circle.style.height = ${size}px;
-                circle.style.top = ${Math.random() * 100}%;
-                circle.style.left = ${Math.random() * 100}%;
-                circle.style.animationDuration = ${Math.random() * 3 + 3}s;
+                circle.style.width = `${size}px`;
+                circle.style.height = `${size}px`;
+                circle.style.top = `${Math.random() * 100}%`;
+                circle.style.left = `${Math.random() * 100}%`;
+                circle.style.animationDuration = `${Math.random() * 3 + 3}s`;
                 container.appendChild(circle);
             }
         }
