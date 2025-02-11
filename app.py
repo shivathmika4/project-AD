@@ -1,19 +1,34 @@
-from flask import Flask, render_template, request
-
-app = Flask(__name__)
-
+from flask import Flask,render_template, request, jsonify
+from test import TextToNum
+import pickle
+app=Flask(__name__)
 @app.route("/")
-def home():
+def Home():
     return render_template("index.html")
-
-@app.route("/predict", methods=["GET", "POST"])
+@app.route("/predict",methods=["GET","POST"])
 def predict():
     if request.method == "POST":
-        msg = request.form.get("message")  # Get user input
-        print(f"User Input: {msg}")  # Print to Visual Studio command shell
-        return render_template("result.html", message=msg)  # Redirect to result page
+        msg=request.form.get("message")
+        print(msg)
 
-    return render_template("predict.html")
+        cl=TextToNum(msg)
+        cl.cleaner()
+        cl.token()
+        cl.removeStop()
+        st=cl.stemme()
+        stvc=" ".join(st)
+        with open("vectorizer.pickle","rb") as vc_file:
+            vectorizer=pickle.load(vc_file)
+        dt=vectorizer.transform([stvc]).toarray()
+        with open('model.pickle',"rb") as md_file:
+            model=pickle.load(md_file)
+        pred=model.predict(dt)
+        print(pred)
+        return jsonify({"prediction":str(pred[0])})
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5050, debug=True)
+
+
+    else:
+        return render_template("predict.html")
+if __name__=="__main__":
+    app.run(host="0.0.0.0",port=5050)
