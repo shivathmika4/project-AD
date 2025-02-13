@@ -5,9 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Predict Sentiment</title>
     <style>
-        /* Smooth fade-in animation for the body */
         body {
-            background: linear-gradient(135deg, #1a1a40, #3a0ca3);
+            background: radial-gradient(circle, #0a192f, #020c1b);
             font-family: 'Poppins', sans-serif;
             display: flex;
             justify-content: center;
@@ -15,6 +14,7 @@
             height: 100vh;
             margin: 0;
             color: #ffffff;
+            overflow: hidden;
             animation: fadeIn 1.5s ease-in-out;
         }
 
@@ -23,17 +23,17 @@
             to { opacity: 1; }
         }
 
-        /* Container with glassmorphism effect */
         .container {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 15px;
             padding: 35px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
             width: 420px;
             text-align: center;
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             animation: scaleIn 0.8s ease-out;
+            z-index: 2;
         }
 
         @keyframes scaleIn {
@@ -44,9 +44,9 @@
         h1 {
             margin-bottom: 20px;
             font-size: 2.4em;
-            color: #ffcc00;
+            color: #4cc9f0;
+            text-shadow: 0 0 10px rgba(76, 201, 240, 0.8);
             animation: slideDown 0.8s ease-out;
-            text-shadow: 0 0 10px rgba(255, 204, 0, 0.8);
         }
 
         @keyframes slideDown {
@@ -54,12 +54,11 @@
             to { transform: translateY(0); opacity: 1; }
         }
 
-        /* Neon glowing textarea */
         textarea {
             width: 90%;
             padding: 12px;
-            background-color: rgba(255, 255, 255, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
             border-radius: 8px;
             color: #ffffff;
             font-size: 1em;
@@ -69,13 +68,12 @@
         }
 
         textarea:focus {
-            border-color: #ffcc00;
-            box-shadow: 0 0 12px #ffcc00;
+            border-color: #4cc9f0;
+            box-shadow: 0 0 12px #4cc9f0;
         }
 
-        /* Glowing button effect */
         .btn {
-            background: linear-gradient(90deg, #ff5733, #ffcc00);
+            background: linear-gradient(45deg, #4895ef, #4361ee);
             border: none;
             padding: 12px 28px;
             font-size: 1.2em;
@@ -86,19 +84,25 @@
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 1px;
-            box-shadow: 0 0 10px rgba(255, 204, 0, 0.6);
+            box-shadow: 0 0 10px rgba(72, 149, 239, 0.6);
+            animation: pulse 2s infinite;
         }
 
         .btn:hover {
             transform: scale(1.1);
-            box-shadow: 0 0 15px rgba(255, 204, 0, 0.9);
+            box-shadow: 0 0 15px rgba(72, 149, 239, 0.9);
         }
 
         .btn:active {
             transform: scale(0.95);
         }
 
-        /* Footer fades in slowly */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
         .footer {
             margin-top: 20px;
             font-size: 0.9em;
@@ -110,6 +114,30 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
+
+        /* Floating blue circles */
+        .floating-circles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .circle {
+            position: absolute;
+            background: rgba(72, 149, 239, 0.3);
+            border-radius: 50%;
+            animation: float 5s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
     </style>
 </head>
 <body>
@@ -120,9 +148,25 @@
             <br><br>
             <button type="submit" class="btn">Know Sentiment</button>
         </form>
-        <div class="footer">
-            <p>Powered by Your Sentiment Analysis Model</p>
-        </div>
+        
     </div>
+    <div class="floating-circles"></div>
+    <script>
+        function createFloatingCircles() {
+            const container = document.querySelector('.floating-circles');
+            for (let i = 0; i < 10; i++) {
+                let circle = document.createElement('div');
+                let size = Math.random() * 100 + 50;
+                circle.classList.add('circle');
+                circle.style.width = `${size}px`;
+                circle.style.height = `${size}px`;
+                circle.style.top = `${Math.random() * 100}%`;
+                circle.style.left = `${Math.random() * 100}%`;
+                circle.style.animationDuration = `${Math.random() * 3 + 3}s`;
+                container.appendChild(circle);
+            }
+        }
+        createFloatingCircles();
+    </script>
 </body>
 </html>
