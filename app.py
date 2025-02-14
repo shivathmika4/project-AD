@@ -23,8 +23,16 @@ def predict():
         with open("model.pickle","rb") as vc_file: #to read the model file
             model = pickle.load(vc_file)
         pred = model.predict(dt)
-        print(pred)
-        return jsonify({"Prediction":str(pred[0])})
+        if pred[0] ==1:
+            pred = "Positive"
+        elif pred[0] ==-1:
+            pred = "Negative"
+        else:
+            pred = "Neutral"
+
+        #prediction = str(pred[0])  # Convert prediction to string
+        
+        return render_template("result.html", prediction=pred)
 
     else:
         return render_template("predict.html")
