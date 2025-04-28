@@ -3,67 +3,170 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sentiment Analysis</title>
+    <title>Predict Sentiment</title>
     <style>
         body {
-            background-color: #121212;
-            color: #fff;
-            font-family: Arial, sans-serif;
+            background: radial-gradient(circle, #0a192f, #020c1b);
+            font-family: 'Poppins', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
+            color: #ffffff;
+            overflow: hidden;
+            animation: fadeIn 1.5s ease-in-out;
         }
-        .container {
-            background: #1e1e1e;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
-            text-align: center;
-            width: 350px;
-            animation: fadeIn 1s ease-in-out;
-        }
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
+
+        .container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 35px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            width: 420px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: scaleIn 0.8s ease-out;
+            z-index: 2;
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2.4em;
+            color: #4cc9f0;
+            text-shadow: 0 0 10px rgba(76, 201, 240, 0.8);
+            animation: slideDown 0.8s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
         textarea {
-            width: 100%;
-            height: 100px;
-            background: #222;
-            color: #fff;
-            border: none;
-            padding: 10px;
-            margin-top: 10px;
-            border-radius: 5px;
+            width: 90%;
+            padding: 12px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 1em;
             resize: none;
             outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
         }
-        button {
-            background: #ff4081;
-            color: #fff;
+
+        textarea:focus {
+            border-color: #4cc9f0;
+            box-shadow: 0 0 12px #4cc9f0;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #4895ef, #4361ee);
             border: none;
-            padding: 10px 15px;
-            margin-top: 10px;
-            border-radius: 5px;
+            padding: 12px 28px;
+            font-size: 1.2em;
+            border-radius: 10px;
+            color: #ffffff;
             cursor: pointer;
-            font-size: 16px;
-            transition: 0.3s;
+            transition: transform 0.3s, box-shadow 0.3s;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 0 10px rgba(72, 149, 239, 0.6);
+            animation: pulse 2s infinite;
         }
-        button:hover {
-            background: #e73370;
+
+        .btn:hover {
             transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(72, 149, 239, 0.9);
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #d1d1e9;
+            animation: fadeInFooter 1.5s ease-in-out;
+        }
+
+        @keyframes fadeInFooter {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Floating blue circles */
+        .floating-circles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .circle {
+            position: absolute;
+            background: rgba(72, 149, 239, 0.3);
+            border-radius: 50%;
+            animation: float 5s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>Sentiment Analysis</h2>
-        <form>
-            <textarea name = "message" placeholder="Enter your message..."></textarea>
-            <button type="submit">Know Sentiment</button>
+        <h1>Sentiment Prediction</h1>
+        <form action="/predict" method="POST">
+            <textarea name="message" placeholder="Enter your message..." required></textarea>
+            <br><br>
+            <button type="submit" class="btn">Know Sentiment</button>
         </form>
+        
     </div>
+    <div class="floating-circles"></div>
+    <script>
+        function createFloatingCircles() {
+            const container = document.querySelector('.floating-circles');
+            for (let i = 0; i < 10; i++) {
+                let circle = document.createElement('div');
+                let size = Math.random() * 100 + 50;
+                circle.classList.add('circle');
+                circle.style.width = '${size}px';
+                circle.style.height = '${size}px';
+                circle.style.top = '${Math.random() * 100}%';
+                circle.style.left = '${Math.random() * 100}%';
+                circle.style.animationDuration = '${Math.random() * 3 + 3}s';
+                container.appendChild(circle);
+            }
+        }
+        createFloatingCircles();
+    </script>
 </body>
 </html>
